@@ -134,6 +134,6 @@ namespace OpenSage.Data.Ini
         Imagefade,
 
         [IniEnum("IMAGECROSSFADE"), AddedIn(SageGame.Bfme)]
-        ImagecrossFade,
+        ImageCrossFade,
     }
 }
