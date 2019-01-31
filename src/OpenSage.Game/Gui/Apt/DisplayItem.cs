@@ -48,13 +48,13 @@ namespace OpenSage.Gui.Apt
         /// <summary>
         /// Create a new DisplayItem
         /// </summary>
-        /// <param name="chararacter"></param>
+        /// <param name="character"></param>
         /// The template character that is used for this Item
         /// <param name="context"></param>
         /// Contains information about the AptFile where this is part of
         /// <param name="parent"></param>
-        /// The parent displayitem (which must be a SpriteItem)
-        void Create(Character chararacter, AptContext context, SpriteItem parent = null);
+        /// The parent displayItem (which must be a SpriteItem)
+        void Create(Character character, AptContext context, SpriteItem parent = null);
         void Update(GameTime gt);
         void Render(AptRenderer renderer, ItemTransform pTransform, DrawingContext2D dc);
         void RunActions(GameTime gt);
