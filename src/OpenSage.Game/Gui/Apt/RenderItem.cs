@@ -4,20 +4,13 @@ using Veldrid;
 
 namespace OpenSage.Gui.Apt
 {
-    public sealed class RenderItem : IDisplayItem
+    public sealed class RenderItem : DisplayItem
     {
-        public SpriteItem Parent { get; private set; }
-        public Character Character { get; private set; }
-        public AptContext Context { get; private set; }
-        public ItemTransform Transform { get; set; }
-        public ObjectContext ScriptObject { get; private set; }
         public Texture Texture { get; set; }
-        public string Name { get; set; }
-        public bool Visible { get; set; }
 
         private bool IsHovered { get; set; }
 
-        public void Create(Character character, AptContext context, SpriteItem parent = null)
+        public override void Create(Character character, AptContext context, SpriteItem parent = null)
         {
             Character = character;
             Context = context;
@@ -28,15 +21,7 @@ namespace OpenSage.Gui.Apt
             IsHovered = false;
         }
 
-        public void Update(GameTime gt)
-        {
-        }
-
-        public void RunActions(GameTime gt)
-        {
-        }
-
-        public void Render(AptRenderer renderer, ItemTransform pTransform, DrawingContext2D dc)
+        public override void Render(AptRenderer renderer, ItemTransform pTransform, DrawingContext2D dc)
         {
             if (!Visible)
                 return;

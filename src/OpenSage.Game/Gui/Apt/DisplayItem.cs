@@ -41,15 +41,15 @@ namespace OpenSage.Gui.Apt
         }
     }
 
-    public interface IDisplayItem
+    public abstract class DisplayItem
     {
-        AptContext Context { get; }
-        SpriteItem Parent { get; }
-        Character Character { get; }
-        ItemTransform Transform { get; set; }
-        ObjectContext ScriptObject { get; }
-        string Name { get; set; }
-        bool Visible { get; set; }
+        public AptContext Context { get; protected set; }
+        public SpriteItem Parent { get; protected set; }
+        public Character Character { get; protected set; }
+        public ItemTransform Transform { get; set; }
+        public ObjectContext ScriptObject { get; protected set; }
+        public string Name { get; set; }
+        public bool Visible { get; set; }
 
         /// <summary>
         /// Create a new DisplayItem
@@ -60,9 +60,12 @@ namespace OpenSage.Gui.Apt
         /// Contains information about the AptFile where this is part of
         /// <param name="parent"></param>
         /// The parent displayItem (which must be a SpriteItem)
-        void Create(Character character, AptContext context, SpriteItem parent = null);
-        void Update(GameTime gt);
-        void Render(AptRenderer renderer, ItemTransform pTransform, DrawingContext2D dc);
-        void RunActions(GameTime gt);
+        public abstract void Create(Character character, AptContext context, SpriteItem parent = null);
+
+        public virtual void Update(GameTime gt) { }
+
+        public virtual void Render(AptRenderer renderer, ItemTransform pTransform, DrawingContext2D dc) { }
+
+        public virtual void RunActions(GameTime gt) { }
     }
 }
