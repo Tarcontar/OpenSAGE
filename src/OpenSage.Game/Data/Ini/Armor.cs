@@ -5,10 +5,11 @@ namespace OpenSage.Data.Ini
 {
     public sealed class Armor
     {
-        internal static Armor Parse(IniParser parser)
+        internal static void Parse(IniParser parser, IniDataContext context)
         {
-            return parser.ParseNamedBlock(
+            parser.ParseBlockContent(
                 (x, name) => x.Name = name,
+                context.Armors,
                 FieldParseTable);
         }
 
