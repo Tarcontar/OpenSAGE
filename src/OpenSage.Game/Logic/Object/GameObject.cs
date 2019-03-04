@@ -133,22 +133,44 @@ namespace OpenSage.Logic.Object
         internal void LocalLogicTick(in TimeInterval gameTime, float tickT, HeightMap heightMap)
         {
             var flags = new BitArray<ModelConditionFlag>();
+            var deltaTime = gameTime.DeltaTime.Milliseconds / 1000.0f;
 
             // Check if the unit is currently moving
             flags.Set(ModelConditionFlag.Moving, true);
             if (ModelConditionFlags.And(flags).AnyBitSet && TargetPoint.HasValue)
             {
-                // This locomotor speed is distance/second
-                var distance = CurrentLocomotor.Speed * (gameTime.DeltaTime.Milliseconds / 1000.0f);
-
-                var direction = Vector3.Normalize(TargetPoint.Value - Transform.Translation);
-                Transform.Translation += direction * distance;
-
                 var x = Transform.Translation.X;
                 var y = Transform.Translation.Y;
-                var z = heightMap.GetHeight(x, y);
 
-                Transform.Translation = new Vector3(x, y, z);
+                // This locomotor speed is distance/second
+                var delta = TargetPoint.Value - Transform.Translation;
+                var distance = CurrentLocomotor.Speed * deltaTime;
+                if (delta.Length() < distance) distance = delta.Length();
+
+
+                var desiredAngle = (float)Math.Atan2(delta.Y - Vector3.UnitX.Y, delta.X - Vector3.UnitX.X);
+                var currentAngle = Transform.EulerAngles.Z;
+                var angleDelta = desiredAngle - currentAngle;
+                var d = CurrentLocomotor.TurnRate * deltaTime * 0.1f;
+                //var newAngle = currentAngle + d;
+
+                var yaw = 0.0f;
+                var pitch = 0.0f;
+                if (Definition.KindOf.Get(ObjectKinds.Vehicle))
+                {
+                    var normal = heightMap.GetNormal(x, y);
+                    var x_ = new Vector3(normal.X, 0.0f, normal.Z);
+                    var y_ = new Vector3(0.0f, normal.Y, normal.Z);
+                    //pitch = (float)Math.Atan2(x_.Y - Vector3.UnitZ.Y, x_.X - Vector3.UnitZ.X);
+                    //yaw = (float)Math.Atan2(y_.Y - Vector3.UnitZ.Y, y_.X - Vector3.UnitZ.X);
+                }
+                Transform.Rotation = Quaternion.CreateFromYawPitchRoll(yaw, pitch, desiredAngle);
+
+                var direction = Vector3.Normalize(delta);
+                Transform.Translation += direction * distance;
+
+                var z = heightMap.GetHeight(x, y);
+                Transform.Z = heightMap.GetHeight(x, y);
 
                 if (Vector3.Distance(Transform.Translation, TargetPoint.Value) < 0.5f)
                 {
